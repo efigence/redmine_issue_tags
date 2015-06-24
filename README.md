@@ -2,7 +2,7 @@
 
 ## License
 
-    Redmine Say Thanks plugin
+    Redmine Issue Tags plugin
     Copyright (C) 2015  efigence S.A.
 
     This program is free software: you can redistribute it and/or modify
