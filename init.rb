@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 Redmine::Plugin.register :redmine_issue_tags do
   name 'Redmine Issue Tags'
   author 'Jacek Grzybowski'
@@ -8,4 +10,5 @@ Redmine::Plugin.register :redmine_issue_tags do
 end
 
 ActionDispatch::Callbacks.to_prepare do
+  Issue.send(:include, RedmineIssueTags::Patches::IssuePatch)
 end
