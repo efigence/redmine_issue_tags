@@ -1,13 +1,13 @@
-require_dependency 'issue'
+require_dependency 'user'
 
 module RedmineIssueTags
   module Patches
-    module IssuePatch
+    module UserPatch
       def self.included(base)
         base.send(:include, InstanceMethods)
         base.class_eval do
           unloadable
-          acts_as_taggable_on :private_tags, :public_tags
+          acts_as_tagger
         end
       end
       module InstanceMethods
