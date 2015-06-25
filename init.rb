@@ -7,6 +7,12 @@ Redmine::Plugin.register :redmine_issue_tags do
   version '0.0.1'
   url 'https://github.com/efigence/redmine_issue_tags'
   author_url 'https://github.com/efigence'
+
+  project_module :issue_tracking do
+    permission :manage_private_tags, {:tags => :create_private}, :read => true, :require => :member
+    permission :view_public_tags, {}, :read => true, :require => :member
+    permission :create_public_tags, {:tags => :create_public}, :require => :member
+  end
 end
 
 ActionDispatch::Callbacks.to_prepare do

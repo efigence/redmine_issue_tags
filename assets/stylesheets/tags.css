@@ -1,3 +1,7 @@
+.tags-inner-wrapper {
+    margin-left:5px;
+}
+
 .tags-container {
     overflow:auto;
     margin: 15px 0;

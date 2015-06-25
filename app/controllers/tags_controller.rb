@@ -1,7 +1,7 @@
 class TagsController < ApplicationController
 
-  before_action :set_user_and_issue
-  # TODO: check if User.current can create tag
+  before_action :set_variables
+  before_action :authorize
 
   def create_private
     tags_list = @issue.owner_tags_on(@user, :private_tags).pluck(:name)
@@ -33,8 +33,10 @@ class TagsController < ApplicationController
 
   private
 
-  def set_user_and_issue
+
+  def set_variables
     @user = User.current
     @issue = Issue.find(params[:issue_id])
+    @project = @issue.project
   end
 end

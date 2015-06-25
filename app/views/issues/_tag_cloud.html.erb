@@ -4,43 +4,56 @@
     <%= javascript_include_tag 'sidebar.js', :plugin => 'redmine_issue_tags' %>
   <% end %>
 
-  <%# TODO sprawdzic czy User.current zalogowany i ma uprawnienia %>
-  <% private_tags = @issue.owner_tags_on(User.current, :private_tags).pluck(:name) %>
-  <% public_tags = @issue.tag_counts_on(:public_tags).pluck(:name, :taggings_count) %>
-  <%# private_tags_counton = Issue.joins(:taggings).where(id: @issue.id, taggings: {tagger_id: User.current}).tag_counts_on(:private_tags) %>
-
   <div id="tags-wrapper">
-    <div class="contextual">
-      <a href="#" id="show-private-form">Add</a>
-    </div>
-    <h3>Private tags</h3>
-    <div id="add-private-form" style="display:none;">
-      <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, issue_id: @issue.id} %>
-    </div>
-    <div class="tags-inner-wrapper">
-      <hr>
-      <div class="tags-container" id="private-tags-container">
-        <% private_tags.each do |tag| %>
-          <a href="#" class="tag"><%= tag %></a>
+
+    <% if User.current.allowed_to?(:manage_private_tags, @issue.project) %>
+
+      <% private_tags = @issue.owner_tags_on(User.current, :private_tags).pluck(:name) %>
+
+      <div class="contextual">
+        <a href="#" id="show-private-form">Add</a>
+      </div>
+      <h3>Private tags</h3>
+      <div id="add-private-form" style="display:none;">
+        <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, issue_id: @issue.id} %>
+      </div>
+      <div class="tags-inner-wrapper">
+        <hr>
+        <div class="tags-container" id="private-tags-container">
+          <% private_tags.each do |tag| %>
+            <a href="#" class="tag"><%= tag %></a>
+          <% end %>
+        </div>
+        <!-- <hr> -->
+      </div>
+
+    <% end %>
+
+    <% if User.current.allowed_to?(:view_public_tags, @issue.project) %>
+
+      <% public_tags = @issue.tag_counts_on(:public_tags).pluck(:name, :taggings_count) %>
+
+      <div class="contextual">
+        <% if User.current.allowed_to?(:create_public_tags, @issue.project) %>
+          <a href="#" id="show-public-form">Add</a>
         <% end %>
       </div>
-      <!-- <hr> -->
-    </div>
-    <div class="contextual">
-      <a href="#" id="show-public-form">Add</a>
-    </div>
-    <h3>Public tags</h3>
-    <div id="add-public-form" style="display:none;">
-      <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id} %>
-    </div>
-    <div class="tags-inner-wrapper">
-      <hr>
-      <div class="tags-container" id="public-tags-container">
-        <% public_tags.each do |tag, count| %>
-          <a href="#" class="tag"><%= tag %> [<%= count %>]</a>
-        <% end %>
+      <h3>Public tags</h3>
+      <div id="add-public-form" style="display:none;">
+        <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id} %>
       </div>
-      <!-- <hr> -->
-    </div>
+      <div class="tags-inner-wrapper">
+        <hr>
+        <div class="tags-container" id="public-tags-container">
+          <% public_tags.each do |tag, count| %>
+            <a href="#" class="tag"><%= tag %> [<%= count %>]</a>
+          <% end %>
+        </div>
+        <!-- <hr> -->
+      </div>
+
+    <% end %>
+
   </div>
+
 <% end %>
