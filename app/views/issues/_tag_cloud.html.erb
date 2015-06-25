@@ -11,10 +11,10 @@
       <% private_tags = @issue.owner_tags_on(User.current, :private_tags).pluck(:name) %>
 
       <div class="contextual">
-        <a href="#" id="show-private-form">Add</a>
+        <a href="#" id="toggle-private-form">Add</a>
       </div>
       <h3>Private tags</h3>
-      <div id="add-private-form" style="display:none;">
+      <div id="add-private-form" class="tags-form">
         <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, issue_id: @issue.id} %>
       </div>
       <div class="tags-inner-wrapper">
@@ -35,11 +35,11 @@
 
       <div class="contextual">
         <% if User.current.allowed_to?(:create_public_tags, @issue.project) %>
-          <a href="#" id="show-public-form">Add</a>
+          <a href="#" id="toggle-public-form">Add</a>
         <% end %>
       </div>
       <h3>Public tags</h3>
-      <div id="add-public-form" style="display:none;">
+      <div id="add-public-form" class="tags-form">
         <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id} %>
       </div>
       <div class="tags-inner-wrapper">

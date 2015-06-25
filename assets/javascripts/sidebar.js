@@ -20,13 +20,22 @@ $(function(){
       },
       complete: function() {
         $('#add-private-form').hide();
+        $('input#private_tag').val('');
       }
     });
   });
 
-  $('#show-private-form').click(function(e){
+  $('#toggle-private-form').click(function(e){
     e.preventDefault();
-    $('#add-private-form').show();
+    var form = $('#add-private-form');
+
+    if (form.is(':visible')) {
+      $(this).text('Add');
+      form.hide();
+    } else {
+      $(this).text('Cancel');
+      form.show();
+    }
   });
 
   $('#add_public').click(function(e){
@@ -48,12 +57,23 @@ $(function(){
       },
       complete: function() {
         $('#add-public-form').hide();
+        $('input#public_tag').val('');
       }
     });
   });
 
-  $('#show-public-form').click(function(e){
+
+  $('#toggle-public-form').click(function(e){
     e.preventDefault();
-    $('#add-public-form').show();
+    var form = $('#add-public-form');
+
+    if (form.is(':visible')) {
+      $(this).text('Add');
+      form.hide();
+    } else {
+      $(this).text('Cancel');
+      form.show();
+    }
   });
+
 });
