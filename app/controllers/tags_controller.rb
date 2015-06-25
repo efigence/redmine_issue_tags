@@ -24,7 +24,7 @@ class TagsController < ApplicationController
     if @user.tag(@issue, with: tags_list, on: :public_tags)
       render json: {
         status: 'success',
-        tags: @issue.public_tags.pluck(:name)
+        tags: @issue.tag_counts_on(:public_tags).pluck(:name, :taggings_count)
        }
     else
       render json: { status: 'failure' }, status: 400

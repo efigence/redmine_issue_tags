@@ -6,7 +6,7 @@
 
   <%# TODO sprawdzic czy User.current zalogowany i ma uprawnienia %>
   <% private_tags = @issue.owner_tags_on(User.current, :private_tags).pluck(:name) %>
-  <% public_tags = @issue.public_tags.pluck(:name) %>
+  <% public_tags = @issue.tag_counts_on(:public_tags).pluck(:name, :taggings_count) %>
   <%# private_tags_counton = Issue.joins(:taggings).where(id: @issue.id, taggings: {tagger_id: User.current}).tag_counts_on(:private_tags) %>
 
   <div id="tags-wrapper">
@@ -36,8 +36,8 @@
     <div class="tags-inner-wrapper">
       <hr>
       <div class="tags-container" id="public-tags-container">
-        <% public_tags.each do |tag| %>
-          <a href="#" class="tag"><%= tag %></a>
+        <% public_tags.each do |tag, count| %>
+          <a href="#" class="tag"><%= tag %> [<%= count %>]</a>
         <% end %>
       </div>
       <!-- <hr> -->

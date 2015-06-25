@@ -41,7 +41,7 @@ $(function(){
       success: function(resp) {
         if (resp.status === 'success') {
           var arr = $.map(resp.tags, function(v){
-            return '<a href="#" class="tag">'+v+'</a>'
+            return '<a href="#" class="tag">'+v[0]+ ' [' + v[1] + ']' + '</a>'
           });
           $('#public-tags-container').html( arr.join(''));
         }
