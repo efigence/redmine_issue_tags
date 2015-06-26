@@ -21,6 +21,7 @@ $(function(){
       complete: function() {
         $('#add-private-form').hide();
         $('input#private_tag').val('');
+        $('#toggle-private-form').text('Add');
       }
     });
   });
@@ -58,6 +59,7 @@ $(function(){
       complete: function() {
         $('#add-public-form').hide();
         $('input#public_tag').val('');
+        $('#toggle-public-form').text('Add');
       }
     });
   });

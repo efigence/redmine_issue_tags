@@ -19,5 +19,6 @@ ActionDispatch::Callbacks.to_prepare do
   require 'redmine_issue_tags/hooks/issue_sidebar_hook'
 
   Issue.send(:include, RedmineIssueTags::Patches::IssuePatch)
+  Project.send(:include, RedmineIssueTags::Patches::ProjectPatch)
   User.send(:include, RedmineIssueTags::Patches::UserPatch)
 end

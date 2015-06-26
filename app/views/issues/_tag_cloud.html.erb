@@ -55,5 +55,51 @@
     <% end %>
 
   </div>
+<% end %>
 
+
+<% if controller_name == 'issues' && action_name == 'index' && @project %>
+  <% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'tags.css', :plugin => 'redmine_issue_tags' %>
+  <% end %>
+
+  <div id="tags-wrapper">
+
+    <% if User.current.allowed_to?(:manage_private_tags, @project) %>
+
+      <% private_tags = @project.private_tags.pluck(:name) %>
+
+      <h3>Private tags</h3>
+
+      <div class="tags-inner-wrapper">
+        <hr>
+        <div class="tags-container" id="private-tags-container">
+          <% private_tags.each do |tag| %>
+            <a href="#" class="tag"><%= tag %></a>
+          <% end %>
+        </div>
+        <!-- <hr> -->
+      </div>
+
+    <% end %>
+
+    <% if User.current.allowed_to?(:view_public_tags, @project) %>
+
+      <% public_tags = @project.public_tags.pluck(:name, :taggings_count) %>
+
+      <h3>Public tags</h3>
+
+      <div class="tags-inner-wrapper">
+        <hr>
+        <div class="tags-container" id="public-tags-container">
+          <% public_tags.each do |tag, count| %>
+            <a href="#" class="tag"><%= tag %> [<%= count %>]</a>
+          <% end %>
+        </div>
+        <!-- <hr> -->
+      </div>
+
+    <% end %>
+
+  </div>
 <% end %>
