@@ -1,3 +1,5 @@
 en:
   field_public_tag: Public tag
   field_private_tag: Private tag
+  label_tags: Tags
+  project_tags_settings: Tags

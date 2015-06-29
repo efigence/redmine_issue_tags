@@ -12,6 +12,7 @@ Redmine::Plugin.register :redmine_issue_tags do
     permission :manage_private_tags, {:tags => :create_private}, :read => true, :require => :member
     permission :view_public_tags, {}, :read => true, :require => :member
     permission :create_public_tags, {:tags => :create_public}, :require => :member
+    permission :administrate_project_tags, {:tags => :destroy}, :require => :member
   end
 end
 
@@ -20,6 +21,12 @@ ActionDispatch::Callbacks.to_prepare do
   require 'application_helper'
   ApplicationHelper.send :include, TagsHelper
 
+  Redmine::MenuManager.map :admin_menu do |menu|
+    menu.push :tags, {:controller => 'admin_tags', :action => 'index'}, :caption => :label_tags
+  end
+
+
+  ProjectsHelper.send(:include, RedmineIssueTags::Patches::ProjectsHelperPatch)
   Issue.send(:include, RedmineIssueTags::Patches::IssuePatch)
   IssueQuery.send(:include, RedmineIssueTags::Patches::IssueQueryPatch)
   Project.send(:include, RedmineIssueTags::Patches::ProjectPatch)

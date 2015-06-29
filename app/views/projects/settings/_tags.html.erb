@@ -1,0 +1,39 @@
+<div class="tags-wrapper" style="width:40%;">
+
+<% @tags = @project.public_tags.includes(:taggings) %>
+<% @tags = @tags.where('name LIKE :q', q: "%#{params[:name]}%") if params[:name].present? %>
+
+  <%= form_tag(settings_project_path(@project, :tab => 'tags'), :method => :get) do %>
+  <fieldset><legend></legend>
+  <label for='name'>Name</label>
+  <%= text_field_tag 'name', params[:name], :size => 30 %>
+  <%= submit_tag l(:button_apply), :class => "small", :name => nil %>
+  <%= link_to l(:button_clear), settings_project_path(@project, :tab => 'tags'), :class => 'icon icon-reload' %>
+  </fieldset>
+  <% end %>
+
+
+  <table class="list">
+    <thead><tr>
+      <th>Tag</th>
+      <th>Creator</th>
+      <th>Utworzono</th>
+      <th>Liczba otagowań</th>
+      <th></th>
+    </tr></thead>
+    <tbody>
+      <% @tags.each do |tag| %>
+        <% first_tagging = tag.taggings.first %>
+        <tr class="<%= cycle 'odd', 'even' %>">
+          <td><%= link_to_tag tag.name, tag.id, :public_tag_id %></td>
+          <td><%= User.find(first_tagging.tagger_id).login %></td>
+          <td><%= first_tagging.created_at.to_s(:db) %></td>
+            <td><%= tag.taggings_count %></td>
+          <td class="buttons">
+            <%= link_to 'Delete', admin_tag_path(tag), method: :delete, class: 'icon icon-del delete-tag', data: {confirm: 'You sure?'} %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

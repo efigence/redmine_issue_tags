@@ -1,3 +1,5 @@
 pl:
   field_public_tag: Tag publiczny
   field_private_tag: Tag prywatny
+  label_tags: Tagi
+  project_tags_settings: Tagi
