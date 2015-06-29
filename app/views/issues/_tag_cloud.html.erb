@@ -55,10 +55,8 @@
     <% end %>
 
   </div>
-<% end %>
 
-
-<% if controller_name == 'issues' && action_name == 'index' && @project %>
+<% elsif controller_name == 'issues' && action_name == 'index' && @project %>
   <% content_for :header_tags do %>
     <%= stylesheet_link_tag 'tags.css', :plugin => 'redmine_issue_tags' %>
   <% end %>
