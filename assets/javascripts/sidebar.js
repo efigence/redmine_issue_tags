@@ -12,8 +12,8 @@ $(function(){
       },
       success: function(resp) {
         if (resp.status === 'success') {
-          var arr = $.map(resp.tags, function(v){
-            return '<a href="#" class="tag">'+v+'</a>'
+          var arr = $.map(resp.tag_links, function(v){
+            return v
           });
           $('#private-tags-container').html( arr.join(''));
         }
@@ -50,8 +50,8 @@ $(function(){
       },
       success: function(resp) {
         if (resp.status === 'success') {
-          var arr = $.map(resp.tags, function(v){
-            return '<a href="#" class="tag">'+v[0]+ ' [' + v[1] + ']' + '</a>'
+          var arr = $.map(resp.tag_links, function(v){
+            return v
           });
           $('#public-tags-container').html( arr.join(''));
         }

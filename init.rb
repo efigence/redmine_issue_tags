@@ -17,6 +17,8 @@ end
 
 ActionDispatch::Callbacks.to_prepare do
   require 'redmine_issue_tags/hooks/issue_sidebar_hook'
+  require 'application_helper'
+  ApplicationHelper.send :include, TagsHelper
 
   Issue.send(:include, RedmineIssueTags::Patches::IssuePatch)
   IssueQuery.send(:include, RedmineIssueTags::Patches::IssueQueryPatch)

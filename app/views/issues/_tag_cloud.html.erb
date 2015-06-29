@@ -8,7 +8,7 @@
 
     <% if User.current.allowed_to?(:manage_private_tags, @issue.project) %>
 
-      <% private_tags = @issue.owner_tags_on(User.current, :private_tags).pluck(:name) %>
+      <% private_tags = @issue.owner_tags_on(User.current, :private_tags).pluck(:id, :name) %>
 
       <div class="contextual">
         <a href="#" id="toggle-private-form">Add</a>
@@ -20,8 +20,8 @@
       <div class="tags-inner-wrapper">
         <hr>
         <div class="tags-container" id="private-tags-container">
-          <% private_tags.each do |tag| %>
-            <a href="#" class="tag"><%= tag %></a>
+          <% private_tags.each do |tag_id, tag_name| %>
+            <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
           <% end %>
         </div>
         <!-- <hr> -->
@@ -31,7 +31,7 @@
 
     <% if User.current.allowed_to?(:view_public_tags, @issue.project) %>
 
-      <% public_tags = @issue.tag_counts_on(:public_tags).pluck(:name, :taggings_count) %>
+      <% public_tags = @issue.tag_counts_on(:public_tags).pluck(:id, :name, :taggings_count) %>
 
       <div class="contextual">
         <% if User.current.allowed_to?(:create_public_tags, @issue.project) %>
@@ -45,8 +45,8 @@
       <div class="tags-inner-wrapper">
         <hr>
         <div class="tags-container" id="public-tags-container">
-          <% public_tags.each do |tag, count| %>
-            <a href="#" class="tag"><%= tag %> [<%= count %>]</a>
+          <% public_tags.each do |tag_id, tag_name, count| %>
+            <%= link_to_tag(tag_name, tag_id, :public_tag_id, count) %>
           <% end %>
         </div>
         <!-- <hr> -->
@@ -65,15 +65,15 @@
 
     <% if User.current.allowed_to?(:manage_private_tags, @project) %>
 
-      <% private_tags = @project.private_tags.pluck(:name) %>
+      <% private_tags = @project.private_tags.pluck(:id, :name) %>
 
       <h3>Private tags</h3>
 
       <div class="tags-inner-wrapper">
         <hr>
         <div class="tags-container" id="private-tags-container">
-          <% private_tags.each do |tag| %>
-            <a href="#" class="tag"><%= tag %></a>
+          <% private_tags.each do |tag_id, tag_name| %>
+            <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
           <% end %>
         </div>
         <!-- <hr> -->
@@ -83,15 +83,15 @@
 
     <% if User.current.allowed_to?(:view_public_tags, @project) %>
 
-      <% public_tags = @project.public_tags.pluck(:name, :taggings_count) %>
+      <% public_tags = @project.public_tags.pluck(:id, :name, :taggings_count) %>
 
       <h3>Public tags</h3>
 
       <div class="tags-inner-wrapper">
         <hr>
         <div class="tags-container" id="public-tags-container">
-          <% public_tags.each do |tag, count| %>
-            <a href="#" class="tag"><%= tag %> [<%= count %>]</a>
+          <% public_tags.each do |tag_id, tag_name, count| %>
+            <%= link_to_tag(tag_name, tag_id, :public_tag_id, count) %>
           <% end %>
         </div>
         <!-- <hr> -->

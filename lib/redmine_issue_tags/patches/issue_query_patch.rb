@@ -24,17 +24,30 @@ module RedmineIssueTags
               :type => :list,
               :values => selectable_public_tags
           end
+          if User.current.allowed_to?(:manage_private_tags, project)
+            add_available_filter "private_tag_id",
+              :type => :list,
+              :values => selectable_private_tags
+          end
         end
 
-
         def sql_for_public_tag_id_field(field, operator, v)
+          sql_for_tag_field(operator, v, "public_tags")
+        end
+
+        def sql_for_private_tag_id_field(field, operator, v)
+          sql_for_tag_field(operator, v, "private_tags")
+        end
+
+        def sql_for_tag_field(operator, values, context)
           op = case operator
                when '=' then 'IN'
                when '!' then 'NOT IN'
                end
 
-          string_val = v.join(',') # TODO sanitize values
-          "tags.id #{op} (#{string_val}) AND taggings.context = 'public_tags'"
+          string_val = values.join(',') # TODO sanitize values
+
+          "tags.id #{op} (#{string_val}) AND taggings.context = '#{context}'"
         end
 
         private
@@ -42,15 +55,23 @@ module RedmineIssueTags
         def selectable_public_tags
           if project_id.present?
             project = Project.find project_id
-            project.public_tags.order(taggings_count: :desc).pluck(:name, :id)
+            project.public_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
           else
             # TODO: co wtedy - widzi tagi ze wszystkich projektów...?
           end
         end
 
+        def selectable_private_tags
+          if project_id.present?
+            project = Project.find project_id
+            project.private_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
+          else
+            # TODO: widzi wszystkie swoje tagi ze wszystkich projektów
+          end
+        end
+
         def joins_for_order_statement_with_tags(order_options)
           joins_string = joins_for_order_statement_without_tags(order_options)
-
 
           if joins_string.present?
             joins_string + " " + tags_join_statement

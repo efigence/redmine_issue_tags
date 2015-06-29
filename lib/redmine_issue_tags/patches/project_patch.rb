@@ -13,12 +13,14 @@ module RedmineIssueTags
         def public_tags
           ActsAsTaggableOn::Tag.joins(:taggings).
             where(taggings: {project_id: id, context: 'public_tags'}).
+            order(taggings_count: :desc).
             distinct
         end
 
         def private_tags(user=User.current)
           ActsAsTaggableOn::Tag.joins(:taggings).
             where(taggings: {project_id: id, context: 'private_tags', tagger_id: user.id}).
+            order(taggings_count: :desc).
             distinct
         end
       end

@@ -1,4 +1,5 @@
 class TagsController < ApplicationController
+  include TagsHelper
 
   before_action :set_variables
   before_action :authorize
@@ -10,7 +11,7 @@ class TagsController < ApplicationController
     if @user.tag(@issue, with: tags_list, on: :private_tags)
       render json: {
         status: 'success',
-        tags:  @issue.owner_tags_on(@user, :private_tags).pluck(:name)
+        tag_links: private_tag_links
        }
     else
       render json: { status: 'failure' }, status: 400
@@ -24,7 +25,7 @@ class TagsController < ApplicationController
     if @user.tag(@issue, with: tags_list, on: :public_tags)
       render json: {
         status: 'success',
-        tags: @issue.tag_counts_on(:public_tags).pluck(:name, :taggings_count)
+        tag_links: public_tag_links
        }
     else
       render json: { status: 'failure' }, status: 400
@@ -33,6 +34,17 @@ class TagsController < ApplicationController
 
   private
 
+  def private_tag_links
+    @issue.owner_tags_on(@user, :private_tags).
+      pluck_to_hash(:id, :name).
+      map {|t| link_to_tag t[:name], t[:id], :private_tag_id}
+  end
+
+  def public_tag_links
+    @issue.tag_counts_on(:public_tags).
+      pluck_to_hash(:id, :name, :taggings_count).
+      map {|t| link_to_tag t[:name], t[:id], :public_tag_id, t[:taggings_count]}
+  end
 
   def set_variables
     @user = User.current
