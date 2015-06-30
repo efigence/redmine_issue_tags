@@ -4,7 +4,8 @@ class AdminTagsController < ApplicationController
 
   def index
     @tags = ActsAsTaggableOn::Tag.joins(:taggings).
-      where(taggings: {context: 'public_tags'}).includes(:taggings)
+      where(taggings: {context: 'public_tags'}).
+      order(taggings_count: :desc).includes(:taggings)
     if params[:name]
       @tags = @tags.where('name LIKE :q', q: "%#{params[:name]}%")
     end

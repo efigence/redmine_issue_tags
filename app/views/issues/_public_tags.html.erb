@@ -14,8 +14,11 @@
 <div class="tags-inner-wrapper">
   <hr>
   <div class="tags-container" id="public-tags-container">
-    <% public_tags.each do |tag_id, tag_name, count| %>
-      <%= link_to_tag(tag_name, tag_id, :public_tag_id, count) %>
+    <% public_tags.each do |tag_id, tag_name| %>
+      <%= link_to_tag(tag_name, tag_id, :public_tag_id) %>
+    <% end %>
+    <% if public_tags.length > 50 %>
+      <span class="tag">...</span>
     <% end %>
   </div>
   <!-- <hr> -->

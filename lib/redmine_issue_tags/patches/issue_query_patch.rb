@@ -27,11 +27,10 @@ module RedmineIssueTags
                 :values => selectable_public_tags(project)
             end
           else
-            allowed_global_tags = User.current.globally_allowed_public_tags
-            if allowed_global_tags && allowed_global_tags.any?
+            if User.current.allowed_projects_public_tags.any?
               add_available_filter "public_tag_id",
                 :type => :list,
-                :values => allowed_global_tags.pluck(:name, :id).map {|a| a.map(&:to_s)}
+                :values => selectable_public_tags
             end
           end
 
@@ -63,11 +62,15 @@ module RedmineIssueTags
 
         private
 
-        def selectable_public_tags(project)
-          project.public_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
+        def selectable_public_tags(project=nil)
+          if project
+            project.public_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
+          else
+            User.current.globally_allowed_public_tags
+          end
         end
 
-        def selectable_private_tags(project) # project or nil
+        def selectable_private_tags(project=nil)
           if project
             project.private_tags.
               order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}

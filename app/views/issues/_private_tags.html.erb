@@ -15,6 +15,9 @@
     <% private_tags.each do |tag_id, tag_name| %>
       <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
     <% end %>
+    <% if private_tags.length > 50 %>
+      <span class="tag">...</span>
+    <% end %>
   </div>
   <!-- <hr> -->
 </div>

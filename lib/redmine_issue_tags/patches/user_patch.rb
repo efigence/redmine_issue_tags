@@ -25,12 +25,14 @@ module RedmineIssueTags
           if admin?
             scope.distinct
           else
-            allowed_project_ids = User.current.projects.select do |p|
-              User.current.allowed_to?(:view_public_tags, p)
-            end.map(&:id)
-            return false if allowed_project_ids.blank? # allowed to nothing => false
+            allowed_project_ids = allowed_projects_public_tags.map(&:id)
             scope.where(taggings: {project_id: allowed_project_ids}).distinct
           end
+        end
+
+        def allowed_projects_public_tags
+          @allowed_projects_public_tags ||= admin? ? Project.all :
+            projects.select {|p| allowed_to?(:view_public_tags, p)}
         end
 
         def allowed_to_view_public_tags_for?(project)

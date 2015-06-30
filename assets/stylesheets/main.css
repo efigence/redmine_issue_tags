@@ -1,1 +1,0 @@
-$("a[href$='/admin/tags']").css('background-image', url(../images/ticket.png));

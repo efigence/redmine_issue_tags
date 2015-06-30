@@ -38,7 +38,7 @@ class TagsController < ApplicationController
       joins('INNER JOIN projects ON projects.id = taggings.project_id').
       joins(:tag).where(context: 'public_tags', tags: {name: @tag.name}, projects: {id: @project.id})
 
-    taggings.delete_all
+    taggings.each { |t| t.destroy! } # delete_all doesn't update counter cache for tag
 
     redirect_to settings_project_path(@project, :tab => 'tags')
   end
@@ -54,7 +54,7 @@ class TagsController < ApplicationController
   def public_tag_links
     @issue.tag_counts_on(:public_tags).
       pluck_to_hash(:id, :name, :taggings_count).
-      map {|t| link_to_tag t[:name], t[:id], :public_tag_id, t[:taggings_count]}
+      map {|t| link_to_tag t[:name], t[:id], :public_tag_id}
   end
 
   def set_variables_for_destroy
