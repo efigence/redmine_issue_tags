@@ -1,7 +1,8 @@
 class TagsController < ApplicationController
   include TagsHelper
 
-  before_action :set_variables
+  before_action :set_variables, except: :destroy
+  before_action :set_variables_for_destroy, only: :destroy
   before_action :authorize
 
   def create_private
@@ -32,6 +33,16 @@ class TagsController < ApplicationController
     end
   end
 
+  def destroy
+    taggings = ActsAsTaggableOn::Tagging.
+      joins('INNER JOIN projects ON projects.id = taggings.project_id').
+      joins(:tag).where(context: 'public_tags', tags: {name: @tag.name}, projects: {id: @project.id})
+
+    taggings.delete_all
+
+    redirect_to settings_project_path(@project, :tab => 'tags')
+  end
+
   private
 
   def private_tag_links
@@ -44,6 +55,11 @@ class TagsController < ApplicationController
     @issue.tag_counts_on(:public_tags).
       pluck_to_hash(:id, :name, :taggings_count).
       map {|t| link_to_tag t[:name], t[:id], :public_tag_id, t[:taggings_count]}
+  end
+
+  def set_variables_for_destroy
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
+    @project = Project.find(params[:project_id])
   end
 
   def set_variables

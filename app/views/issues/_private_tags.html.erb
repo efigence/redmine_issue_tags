@@ -1,0 +1,20 @@
+<% if @issue %>
+  <div class="contextual">
+    <a href="#" id="toggle-private-form">Add</a>
+  </div>
+<% end %>
+<h3>Private tags</h3>
+<% if @issue %>
+  <div id="add-private-form" class="tags-form">
+    <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, issue_id: @issue.id} %>
+  </div>
+<% end %>
+<div class="tags-inner-wrapper">
+  <hr>
+  <div class="tags-container" id="private-tags-container">
+    <% private_tags.each do |tag_id, tag_name| %>
+      <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
+    <% end %>
+  </div>
+  <!-- <hr> -->
+</div>

@@ -1,0 +1,22 @@
+<% if @issue %>
+  <div class="contextual">
+    <% if User.current.allowed_to?(:create_public_tags, @issue.project) %>
+      <a href="#" id="toggle-public-form">Add</a>
+    <% end %>
+  </div>
+<% end %>
+<h3>Public tags</h3>
+<% if @issue %>
+  <div id="add-public-form" class="tags-form">
+    <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id} %>
+  </div>
+<% end %>
+<div class="tags-inner-wrapper">
+  <hr>
+  <div class="tags-container" id="public-tags-container">
+    <% public_tags.each do |tag_id, tag_name, count| %>
+      <%= link_to_tag(tag_name, tag_id, :public_tag_id, count) %>
+    <% end %>
+  </div>
+  <!-- <hr> -->
+</div>

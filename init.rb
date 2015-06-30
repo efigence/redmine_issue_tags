@@ -18,13 +18,14 @@ end
 
 ActionDispatch::Callbacks.to_prepare do
   require 'redmine_issue_tags/hooks/issue_sidebar_hook'
+  require 'redmine_issue_tags/hooks/layout_hook'
+
   require 'application_helper'
   ApplicationHelper.send :include, TagsHelper
 
   Redmine::MenuManager.map :admin_menu do |menu|
     menu.push :tags, {:controller => 'admin_tags', :action => 'index'}, :caption => :label_tags
   end
-
 
   ProjectsHelper.send(:include, RedmineIssueTags::Patches::ProjectsHelperPatch)
   Issue.send(:include, RedmineIssueTags::Patches::IssuePatch)

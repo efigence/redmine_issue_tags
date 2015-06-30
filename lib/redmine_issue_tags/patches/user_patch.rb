@@ -11,6 +11,46 @@ module RedmineIssueTags
         end
       end
       module InstanceMethods
+
+        def owned_private_tags
+          owned_tags.joins(:taggings).
+            where(taggings: {context: "private_tags"}).
+            order(taggings_count: :desc)
+        end
+
+        def globally_allowed_public_tags
+          scope = ActsAsTaggableOn::Tag.joins(:taggings).
+            where(taggings: {context: 'public_tags'}).
+            order(taggings_count: :desc)
+          if admin?
+            scope.distinct
+          else
+            allowed_project_ids = User.current.projects.select do |p|
+              User.current.allowed_to?(:view_public_tags, p)
+            end.map(&:id)
+            return false if allowed_project_ids.blank? # allowed to nothing => false
+            scope.where(taggings: {project_id: allowed_project_ids}).distinct
+          end
+        end
+
+        def allowed_to_view_public_tags_for?(project)
+          project && User.current.allowed_to?(:view_public_tags, project)
+        end
+
+        def allowed_to_private_tags?(project)
+          allowed_to_private_tags_for?(project) || allowed_to_private_tags_globally?
+        end
+
+        def allowed_to_private_tags_for?(project)
+          project && User.current.allowed_to?(:manage_private_tags, project)
+        end
+
+        def allowed_to_private_tags_globally?
+          return true if User.current.admin?
+          allowed_to_globally = User.current.projects.any? do |p|
+            User.current.allowed_to?(:manage_private_tags, p)
+          end
+        end
       end
     end
   end

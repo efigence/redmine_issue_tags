@@ -14,7 +14,6 @@ module RedmineIssueTags
         def project_settings_tabs_with_tags
           tabs = project_settings_tabs_without_tags
 
-          # TODO: check permissions
           if User.current.allowed_to?(:administrate_project_tags, @project)
             tabs << {
               name: 'tags',

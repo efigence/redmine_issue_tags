@@ -19,15 +19,26 @@ module RedmineIssueTags
         def initialize_available_filters_with_tags
           initialize_available_filters_without_tags
           project = Project.find_by(id: project_id)
-          if User.current.allowed_to?(:view_public_tags, project)
-            add_available_filter "public_tag_id",
-              :type => :list,
-              :values => selectable_public_tags
+
+          if project
+            if User.current.allowed_to?(:view_public_tags, project)
+              add_available_filter "public_tag_id",
+                :type => :list,
+                :values => selectable_public_tags(project)
+            end
+          else
+            allowed_global_tags = User.current.globally_allowed_public_tags
+            if allowed_global_tags && allowed_global_tags.any?
+              add_available_filter "public_tag_id",
+                :type => :list,
+                :values => allowed_global_tags.pluck(:name, :id).map {|a| a.map(&:to_s)}
+            end
           end
-          if User.current.allowed_to?(:manage_private_tags, project)
+
+          if User.current.allowed_to_private_tags?(project)
             add_available_filter "private_tag_id",
               :type => :list,
-              :values => selectable_private_tags
+              :values => selectable_private_tags(project)
           end
         end
 
@@ -52,21 +63,16 @@ module RedmineIssueTags
 
         private
 
-        def selectable_public_tags
-          if project_id.present?
-            project = Project.find project_id
-            project.public_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
-          else
-            # TODO: co wtedy - widzi tagi ze wszystkich projektów...?
-          end
+        def selectable_public_tags(project)
+          project.public_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
         end
 
-        def selectable_private_tags
-          if project_id.present?
-            project = Project.find project_id
-            project.private_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
+        def selectable_private_tags(project) # project or nil
+          if project
+            project.private_tags.
+              order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
           else
-            # TODO: widzi wszystkie swoje tagi ze wszystkich projektów
+            User.current.owned_private_tags.pluck(:name, :id).map {|a| a.map(&:to_s)}
           end
         end
 
@@ -74,7 +80,7 @@ module RedmineIssueTags
           joins_string = joins_for_order_statement_without_tags(order_options)
 
           if joins_string.present?
-            joins_string + " " + tags_join_statement
+            [joins_string, tags_join_statement].join(' ')
           else
             tags_join_statement
           end
