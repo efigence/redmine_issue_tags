@@ -45,18 +45,24 @@ module RedmineIssueTags
         end
 
         def sql_for_public_tag_id_field(field, operator, v)
-          sql_operator = sql_operator_for_tags(operator)
-          string_val = v.join(',') # TODO sanitize values
-          "tags.id #{sql_operator} (#{string_val}) AND taggings.context = 'public_tags'"
+          sql_for_tag_field(operator, v) do |sql_operator|
+            "tags.id #{sql_operator} (:ids) AND taggings.context = 'public_tags'"
+          end
         end
 
         def sql_for_private_tag_id_field(field, operator, v)
-          sql_operator = sql_operator_for_tags(operator)
-          string_val = v.join(',') # TODO sanitize values
-          "tags.id #{sql_operator} (#{string_val}) AND taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}"
+          sql_for_tag_field(operator, v) do |sql_operator|
+            "tags.id #{sql_operator} (:ids) AND taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}"
+          end
         end
 
         private
+
+        def sql_for_tag_field(operator, v, &block)
+          tag_ids = v.map(&:to_i)
+          sql_operator = sql_operator_for_tags(operator)
+          ActiveRecord::Base.send :sanitize_sql_array, [yield(sql_operator), ids: tag_ids]
+        end
 
         def selectable_public_tags(project=nil)
           scope = if project
