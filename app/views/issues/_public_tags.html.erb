@@ -1,6 +1,6 @@
 <% if @issue %>
   <div class="contextual">
-    <% if User.current.allowed_to?(:create_public_tags, @issue.project) %>
+    <% if User.current.allowed_to?(:manage_public_tags, @issue.project) %>
       <a href="#" id="toggle-public-form">Add</a>
     <% end %>
   </div>

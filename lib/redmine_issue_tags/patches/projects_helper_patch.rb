@@ -14,10 +14,10 @@ module RedmineIssueTags
         def project_settings_tabs_with_tags
           tabs = project_settings_tabs_without_tags
 
-          if User.current.allowed_to?(:administrate_project_tags, @project)
+          if User.current.allowed_to?(:manage_public_tags, @project)
             tabs << {
               name: 'tags',
-              action: :administrate_project_tags,
+              action: :manage_public_tags,
               partial: 'projects/settings/tags',
               label: :project_tags_settings
             }
