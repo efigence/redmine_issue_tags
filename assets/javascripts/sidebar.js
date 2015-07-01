@@ -78,4 +78,19 @@ $(function(){
     }
   });
 
+  $("#tags-wrapper").on("click", "span.tag-del", function(e) {
+    e.preventDefault();
+    var self = $(e.target),
+        container = self.parent();
+
+    if (confirm('Are you sure to detach this tag from issue?')) {
+      $.ajax({
+        type: 'DELETE',
+        url: self.data('url'),
+        success: function(resp) {
+          container.remove();
+        }
+      });
+    }
+  });
 });

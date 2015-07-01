@@ -9,10 +9,9 @@ Redmine::Plugin.register :redmine_issue_tags do
   author_url 'https://github.com/efigence'
 
   project_module :issue_tracking do
-    permission :manage_private_tags, {:tags => :create_private}, :read => true, :require => :member
+    permission :manage_private_tags, {:tags => [:create_private, :destroy_private_tagging]}, :read => true, :require => :member
+    permission :manage_public_tags, {:tags => [:create_public, :destroy, :destroy_public_tagging]}, :require => :member
     permission :view_public_tags, {}, :read => true, :require => :member
-
-    permission :manage_public_tags, {:tags => [:create_public, :destroy]}, :require => :member
   end
 end
 

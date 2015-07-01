@@ -13,7 +13,17 @@
   <hr>
   <div class="tags-container" id="private-tags-container">
     <% private_tags.each do |tag_id, tag_name| %>
-      <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
+
+      <% if @issue %>
+
+        <span class="tag-container">
+          <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
+          <span class="tag-del" data-url="<%= destroy_private_tagging_path(issue_id: @issue.id, tag_id: tag_id) %>">✕</span>
+        </span>
+
+      <% else %>
+        <%= link_to_tag(tag_name, tag_id, :private_tag_id) %>
+      <% end %>
     <% end %>
     <% if private_tags.length > 50 %>
       <span class="tag">...</span>

@@ -1,8 +1,7 @@
-<% if @issue %>
+<% can_manage_public = @issue && User.current.allowed_to?(:manage_public_tags, @project) %>
+<% if can_manage_public %>
   <div class="contextual">
-    <% if User.current.allowed_to?(:manage_public_tags, @issue.project) %>
-      <a href="#" id="toggle-public-form">Add</a>
-    <% end %>
+    <a href="#" id="toggle-public-form">Add</a>
   </div>
 <% end %>
 <h3>Public tags</h3>
@@ -15,7 +14,17 @@
   <hr>
   <div class="tags-container" id="public-tags-container">
     <% public_tags.each do |tag_id, tag_name| %>
-      <%= link_to_tag(tag_name, tag_id, :public_tag_id) %>
+
+      <% if can_manage_public %>
+
+        <span class="tag-container">
+          <%= link_to_tag(tag_name, tag_id, :public_tag_id) %>
+          <span class="tag-del" data-url="<%= destroy_public_tagging_path(issue_id: @issue.id, tag_id: tag_id) %>">✕</span>
+        </span>
+
+      <% else %>
+        <%= link_to_tag(tag_name, tag_id, :public_tag_id) %>
+      <% end %>
     <% end %>
     <% if public_tags.length > 50 %>
       <span class="tag">...</span>

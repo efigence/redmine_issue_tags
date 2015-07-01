@@ -33,6 +33,7 @@ class TagsController < ApplicationController
     end
   end
 
+  # destroy all public taggings for tag @ project
   def destroy
     taggings = ActsAsTaggableOn::Tagging.
       joins('INNER JOIN projects ON projects.id = taggings.project_id').
@@ -43,18 +44,34 @@ class TagsController < ApplicationController
     redirect_to settings_project_path(@project, :tab => 'tags')
   end
 
+
+  # destroy public tagging for tag @ issue
+  def destroy_public_tagging
+    taggings = @issue.taggings.joins(:tag).where(context: 'public_tags', tag_id: params[:tag_id])
+    taggings.each { |t| t.destroy! }
+    render json: {status: 'success'}
+  end
+
+  # destroy private tagging for tag @ issue @ user
+  def destroy_private_tagging
+    taggings = @user.owned_taggings.where(context: 'private_tags',
+      taggable_id: @issue.id, tag_id: params[:tag_id])
+    taggings.each { |t| t.destroy! }
+    render json: {status: 'success'}
+  end
+
   private
 
   def private_tag_links
     @issue.owner_tags_on(@user, :private_tags).
       pluck_to_hash(:id, :name).
-      map {|t| link_to_tag t[:name], t[:id], :private_tag_id}
+      map {|t| wrap_tag_into_html(t, @issue.id, :private) }
   end
 
   def public_tag_links
     @issue.tag_counts_on(:public_tags).
       pluck_to_hash(:id, :name, :taggings_count).
-      map {|t| link_to_tag t[:name], t[:id], :public_tag_id}
+      map {|t| wrap_tag_into_html(t, @issue.id, :public) }
   end
 
   def set_variables_for_destroy
