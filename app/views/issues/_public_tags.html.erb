@@ -5,7 +5,7 @@
   </div>
 <% end %>
 <h3>Public tags</h3>
-<% if @issue %>
+<% if can_manage_public %>
   <div id="add-public-form" class="tags-form">
     <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id} %>
   </div>
@@ -16,16 +16,15 @@
     <% public_tags.each do |tag_id, tag_name| %>
 
       <% if can_manage_public %>
-
         <span class="tag-container">
           <%= link_to_tag(tag_name, tag_id, :public_tag_id) %>
           <span class="tag-del" data-url="<%= destroy_public_tagging_path(issue_id: @issue.id, tag_id: tag_id) %>">✕</span>
         </span>
-
       <% else %>
         <%= link_to_tag(tag_name, tag_id, :public_tag_id) %>
       <% end %>
     <% end %>
+
     <% if public_tags.length > 50 %>
       <span class="tag">...</span>
     <% end %>

@@ -3,46 +3,40 @@
 <% end %>
 
 <div id="tags-wrapper">
+  <% if @project %>
 
-  <% if User.current.allowed_to_private_tags?(@project) %>
-
-    <% if @project %>
+    <% if User.current.allowed_to?(:manage_private_tags, @project) %>
       <% tags_count = @project.private_tags.count %>
-
       <% cache "project_private_tags_#{@project.id}_#{User.current.id}_#{tags_count}" do %>
         <% private_tags = @project.private_tags.limit(50).pluck(:id, :name) %>
         <%= render 'issues/private_tags', private_tags: private_tags %>
       <% end %>
-    <% else %>
-      <% tags_count = User.current.owned_private_tags.count %>
-
-      <% cache "global_private_tags_#{User.current.id}_#{tags_count}" do %>
-        <% private_tags = User.current.owned_private_tags.limit(50).pluck(:id, :name) %>
-        <%= render 'issues/private_tags', private_tags: private_tags %>
-      <% end %>
     <% end %>
-
-  <% end %>
-
-  <% if @project %>
 
     <% if User.current.allowed_to?(:view_public_tags, @project) %>
       <% tags_count = @project.public_tags.count %>
-
       <% cache "project_public_tags_#{@project.id}_#{tags_count}" do %>
         <% public_tags = @project.public_tags.limit(50).pluck(:id, :name) %>
         <%= render 'issues/public_tags', public_tags: public_tags %>
       <% end %>
     <% end %>
 
-  <% elsif User.current.allowed_projects_public_tags.any? %>
+  <% else %>
 
-    <% tags_count = User.current.globally_allowed_public_tags.count %>
+    <% if User.current.allowed_to_private_tags_globally? %>
+      <% tags_count = User.current.owned_private_tags.count %>
+      <% cache "global_private_tags_#{User.current.id}_#{tags_count}" do %>
+        <% private_tags = User.current.owned_private_tags.limit(50).pluck(:id, :name) %>
+        <%= render 'issues/private_tags', private_tags: private_tags %>
+      <% end %>
+    <% end %>
 
-    <% cache "global_public_tags_#{User.current.id}_#{tags_count}" do %>
-      <% public_tags = User.current.globally_allowed_public_tags.limit(50).pluck(:id, :name) %>
-      <%= render 'issues/public_tags', public_tags: public_tags %>
+    <% if User.current.allowed_projects_public_tags.any? %>
+      <% tags_count = User.current.globally_allowed_public_tags.count %>
+      <% cache "global_public_tags_#{User.current.id}_#{tags_count}" do %>
+        <% public_tags = User.current.globally_allowed_public_tags.limit(50).pluck(:id, :name) %>
+        <%= render 'issues/public_tags', public_tags: public_tags %>
+      <% end %>
     <% end %>
   <% end %>
-
 </div>

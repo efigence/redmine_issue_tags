@@ -7,11 +7,9 @@ module RedmineIssueTags
         base.send(:include, InstanceMethods)
         base.class_eval do
           unloadable
-
           alias_method_chain :initialize_available_filters, :tags
           alias_method_chain :joins_for_order_statement, :tags
           alias_method_chain :issue_count, :tags
-
         end
       end
       module InstanceMethods
@@ -26,56 +24,62 @@ module RedmineIssueTags
                 :type => :list,
                 :values => selectable_public_tags(project)
             end
+            if User.current.allowed_to?(:manage_private_tags, project)
+              add_available_filter "private_tag_id",
+                :type => :list,
+                :values => selectable_private_tags(project)
+            end
           else
             if User.current.allowed_projects_public_tags.any?
               add_available_filter "public_tag_id",
                 :type => :list,
                 :values => selectable_public_tags
             end
-          end
 
-          if User.current.allowed_to_private_tags?(project)
-            add_available_filter "private_tag_id",
-              :type => :list,
-              :values => selectable_private_tags(project)
+            if User.current.allowed_to_private_tags_globally?
+              add_available_filter "private_tag_id",
+                :type => :list,
+                :values => selectable_private_tags
+            end
           end
         end
 
         def sql_for_public_tag_id_field(field, operator, v)
-          sql_for_tag_field(operator, v, "public_tags")
+          sql_operator = sql_operator_for_tags(operator)
+          string_val = v.join(',') # TODO sanitize values
+          "tags.id #{sql_operator} (#{string_val}) AND taggings.context = 'public_tags'"
         end
 
         def sql_for_private_tag_id_field(field, operator, v)
-          sql_for_tag_field(operator, v, "private_tags")
-        end
-
-        def sql_for_tag_field(operator, values, context)
-          op = case operator
-               when '=' then 'IN'
-               when '!' then 'NOT IN'
-               end
-
-          string_val = values.join(',') # TODO sanitize values
-
-          "tags.id #{op} (#{string_val}) AND taggings.context = '#{context}'"
+          sql_operator = sql_operator_for_tags(operator)
+          string_val = v.join(',') # TODO sanitize values
+          "tags.id #{sql_operator} (#{string_val}) AND taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}"
         end
 
         private
 
         def selectable_public_tags(project=nil)
-          if project
-            project.public_tags.order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
-          else
-            User.current.globally_allowed_public_tags
-          end
+          scope = if project
+                    project.public_tags.order(taggings_count: :desc)
+                  else
+                    User.current.globally_allowed_public_tags
+                  end
+          scope.pluck(:name, :id).map {|a| a.map(&:to_s)}
         end
 
         def selectable_private_tags(project=nil)
-          if project
-            project.private_tags.
-              order(taggings_count: :desc).pluck(:name, :id).map {|a| a.map(&:to_s)}
-          else
-            User.current.owned_private_tags.pluck(:name, :id).map {|a| a.map(&:to_s)}
+          scope = if project
+                    project.private_tags.order(taggings_count: :desc)
+                  else
+                    User.current.owned_private_tags
+                  end
+          scope.pluck(:name, :id).map {|a| a.map(&:to_s)}
+        end
+
+        def sql_operator_for_tags(operator)
+          case operator
+          when '=' then 'IN'
+          when '!' then 'NOT IN'
           end
         end
 

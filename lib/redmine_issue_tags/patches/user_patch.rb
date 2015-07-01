@@ -35,22 +35,10 @@ module RedmineIssueTags
             projects.select {|p| allowed_to?(:view_public_tags, p)}
         end
 
-        def allowed_to_view_public_tags_for?(project)
-          project && User.current.allowed_to?(:view_public_tags, project)
-        end
-
-        def allowed_to_private_tags?(project)
-          allowed_to_private_tags_for?(project) || allowed_to_private_tags_globally?
-        end
-
-        def allowed_to_private_tags_for?(project)
-          project && User.current.allowed_to?(:manage_private_tags, project)
-        end
-
         def allowed_to_private_tags_globally?
           return true if User.current.admin?
-          allowed_to_globally = User.current.projects.any? do |p|
-            User.current.allowed_to?(:manage_private_tags, p)
+          allowed_to_globally = projects.any? do |p|
+            allowed_to?(:manage_private_tags, p)
           end
         end
       end

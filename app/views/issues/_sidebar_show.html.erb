@@ -4,7 +4,6 @@
 <% end %>
 
 <div id="tags-wrapper">
-
   <% if User.current.allowed_to?(:manage_private_tags, @issue.project) %>
     <% private_tags_count = @issue.owner_tags_on(User.current, :private_tags).count %>
     <% cache "issue_private_tags_#{@issue.id}_#{User.current.id}_#{private_tags_count}" do %>
@@ -20,5 +19,4 @@
       <%= render 'issues/public_tags', public_tags: public_tags %>
     <% end %>
   <% end %>
-
 </div>
