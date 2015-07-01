@@ -21,7 +21,7 @@ $(function(){
       complete: function() {
         $('#add-private-form').hide();
         $('input#private_tag').val('');
-        $('#toggle-private-form').text('Add');
+        $('#toggle-private-form').text( $('#toggle-private-form').data('add') );
       }
     });
   });
@@ -31,10 +31,10 @@ $(function(){
     var form = $('#add-private-form');
 
     if (form.is(':visible')) {
-      $(this).text('Add');
+      $(this).text( $(this).data('add') );
       form.hide();
     } else {
-      $(this).text('Cancel');
+      $(this).text( $(this).data('cancel') );
       form.show();
     }
   });
@@ -59,7 +59,7 @@ $(function(){
       complete: function() {
         $('#add-public-form').hide();
         $('input#public_tag').val('');
-        $('#toggle-public-form').text('Add');
+        $('#toggle-public-form').text( $('#toggle-public-form').data('add') );
       }
     });
   });
@@ -70,23 +70,23 @@ $(function(){
     var form = $('#add-public-form');
 
     if (form.is(':visible')) {
-      $(this).text('Add');
+      $(this).text( $(this).data('add') );
       form.hide();
     } else {
-      $(this).text('Cancel');
+      $(this).text( $(this).data('cancel') );
       form.show();
     }
   });
 
   $("#tags-wrapper").on("click", "span.tag-del", function(e) {
     e.preventDefault();
-    var self = $(e.target),
-        container = self.parent();
+    var container = $(this).parent(),
+        confirmation = $(this).closest('#tags-wrapper').data('confirm');
 
-    if (confirm('Are you sure to detach this tag from issue?')) {
+    if (confirm(confirmation)) {
       $.ajax({
         type: 'DELETE',
-        url: self.data('url'),
+        url: $(this).data('url'),
         success: function(resp) {
           container.remove();
         }

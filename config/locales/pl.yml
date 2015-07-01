@@ -3,3 +3,12 @@ pl:
   field_private_tag: Tag prywatny
   label_tags: Tagi
   project_tags_settings: Tagi
+  tag_list: Lista tagów
+  tag: Tag
+  tag_creator: Autor
+  tag_created: Utworzono
+  tag_count: Liczba otagowań
+  tag_delete_all_confirm: "Jesteś pewny, że chcesz globalnie usunąć wszystkie otagowania?"
+  private_tags: Tagi prywatne
+  public_tags: Tagi publiczne
+  confirm_tag_delete: "Jesteś pewny, że chcesz odczepić tego taga od taska?"

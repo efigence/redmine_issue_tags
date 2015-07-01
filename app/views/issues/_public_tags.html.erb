@@ -1,10 +1,10 @@
 <% can_manage_public = @issue && User.current.allowed_to?(:manage_public_tags, @project) %>
 <% if can_manage_public %>
   <div class="contextual">
-    <a href="#" id="toggle-public-form">Add</a>
+    <a href="#" id="toggle-public-form" data-add="<%= l(:button_add) %>" data-cancel="<%= l(:button_cancel) %>"><%= l(:button_add) %></a>
   </div>
 <% end %>
-<h3>Public tags</h3>
+<h3><%= l(:public_tags) %></h3>
 <% if can_manage_public %>
   <div id="add-public-form" class="tags-form">
     <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id} %>

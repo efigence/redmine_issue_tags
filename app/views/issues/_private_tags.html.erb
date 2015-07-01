@@ -1,9 +1,9 @@
 <% if @issue %>
   <div class="contextual">
-    <a href="#" id="toggle-private-form">Add</a>
+    <a href="#" id="toggle-private-form" data-add="<%= l(:button_add) %>" data-cancel="<%= l(:button_cancel) %>"><%= l(:button_add) %></a>
   </div>
 <% end %>
-<h3>Private tags</h3>
+<h3><%= l(:private_tags) %></h3>
 <% if @issue %>
   <div id="add-private-form" class="tags-form">
     <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, issue_id: @issue.id} %>

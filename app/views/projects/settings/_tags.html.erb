@@ -15,9 +15,9 @@
 
   <table class="list" style="margin-top:10px;">
     <thead><tr>
-      <th>Tag</th>
-      <th>Creator</th>
-      <th>Utworzono</th>
+      <th><%= l(:tag) %></th>
+      <th><%= l(:tag_creator) %></th>
+      <th><%= l(:tag_created) %></th>
       <th></th>
     </tr></thead>
     <tbody>
@@ -28,7 +28,7 @@
           <td><%= User.find(first_tagging.tagger_id).login %></td>
           <td><%= first_tagging.created_at.to_s(:db) %></td>
           <td class="buttons">
-            <%= link_to 'Delete', tag_path(tag, project_id: @project.id), method: :delete, class: 'icon icon-del delete-tag', data: {confirm: 'You sure?'} %>
+            <%= link_to l(:button_delete), tag_path(tag, project_id: @project.id), method: :delete, class: 'icon icon-del delete-tag', data: {confirm: 'You sure?'} %>
           </td>
         </tr>
       <% end %>

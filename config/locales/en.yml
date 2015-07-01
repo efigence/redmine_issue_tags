@@ -3,3 +3,12 @@ en:
   field_private_tag: Private tag
   label_tags: Tags
   project_tags_settings: Tags
+  tag_list: Tag list
+  tag: Tag
+  tag_creator: Creator
+  tag_created: Created
+  tag_count: Tagging count
+  tag_delete_all_confirm: "Are you sure you want to delete all occurances of this tag globally?"
+  private_tags: Private tags
+  public_tags: Public tags
+  confirm_tag_delete: "Are you sure you want to detach this tag from issue?"
