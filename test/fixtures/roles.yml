@@ -68,7 +68,7 @@ roles_001:
   position: 1
 
 roles_002:
-  name: Dev
+  name: Developer
   id: 2
   builtin: 0
   issues_visibility: all
@@ -129,8 +129,7 @@ roles_002:
     - :view_changesets
     - :manage_related_issues
     - :manage_project_activities
-    - :manage_private_tags
-    - :manage_public_tags
     - :view_public_tags
+    - :manage_public_tags
 
-  position: 1
+  position: 2
