@@ -12,3 +12,6 @@ pl:
   private_tags: Tagi prywatne
   public_tags: Tagi publiczne
   confirm_tag_delete: "Jesteś pewny, że chcesz odczepić tego taga od taska?"
+  permission_manage_private_tags: Zarządzanie prywatnymi tagami
+  permission_view_public_tags: Podgląd tagów publicznych
+  permission_manage_public_tags: Zarządzanie publicznymi tagami

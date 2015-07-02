@@ -1,4 +1,5 @@
 class AdminTagsController < ApplicationController
+  layout 'admin'
 
   before_action :authorize_admin!
 

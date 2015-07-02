@@ -25,6 +25,7 @@ Developed and tested on Redmine 3.0.3.
 * `[public tags manager]` detach public tag from issue on issue page.
 * `[public tags manager]` detach public tag from all issues in a project on project settings tags tab.
 * `[private tags manager]` attach/detach private tags to a single issue.
+* `[admin]` - detach tag from all redmine issues globally (admin panel).
 
 #### Permissions
 
