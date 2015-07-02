@@ -1,0 +1,6 @@
+issue_relation_001:
+  id: 1
+  issue_from_id: 5
+  issue_to_id: 6
+  relation_type: relates
+  delay:

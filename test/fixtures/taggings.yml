@@ -1,0 +1,65 @@
+public_tagging_1: # for admin
+  id: 1
+  tag_id: 1
+  taggable_id: 1
+  taggable_type: Issue
+  tagger_id: 1
+  tagger_type: Principal
+  context: public_tags
+  created_at: <%= Time.now %>
+  project_id: 1
+
+public_tagging_2: # for manager
+  id: 2
+  tag_id: 2
+  taggable_id: 1
+  taggable_type: Issue
+  tagger_id: 2
+  tagger_type: Principal
+  context: public_tags
+  created_at: <%= Time.now %>
+  project_id: 1
+
+public_tagging_3: # for manager @ project_2 issue
+  id: 3
+  tag_id: 3
+  taggable_id: 4
+  taggable_type: Issue
+  tagger_id: 2
+  tagger_type: Principal
+  context: public_tags
+  created_at: <%= Time.now %>
+  project_id: 2
+
+private_tagging_1: # for manager @ project_1 issue
+  id: 4
+  tag_id: 4
+  taggable_id: 1
+  taggable_type: Issue
+  tagger_id: 2
+  tagger_type: Principal
+  context: private_tags
+  created_at: <%= Time.now %>
+  project_id: 1
+
+private_tagging_2: # for admin @ project_1 issue
+  id: 5
+  tag_id: 5
+  taggable_id: 1
+  taggable_type: Issue
+  tagger_id: 1
+  tagger_type: Principal
+  context: private_tags
+  created_at: <%= Time.now %>
+  project_id: 1
+
+public_tagging_4: # for admin @ project_1 issue 2
+  id: 6
+  tag_id: 6
+  taggable_id: 2
+  taggable_type: Issue
+  tagger_id: 1
+  tagger_type: Principal
+  context: public_tags
+  created_at: <%= Time.now %>
+  project_id: 1

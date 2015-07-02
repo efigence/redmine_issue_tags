@@ -14,10 +14,8 @@ class AdminTagsController < ApplicationController
 
   def destroy
     tag = ActsAsTaggableOn::Tag.find(params[:id])
-    ActiveRecord::Base.transaction do
-      tag.taggings.delete_all
-      tag.destroy!
-    end
+    taggings = tag.taggings.where(context: "public_tags")
+    taggings.each { |t| t.destroy! }
     redirect_to action: :index
   end
 
