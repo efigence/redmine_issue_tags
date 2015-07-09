@@ -94,15 +94,71 @@ $(function(){
     }
   });
 
-  $('input#private_tag').keypress(function(e) {
-    if (e.keyCode == 13) {
-      $('#add_private').click();
+  $('input#private_tag').selectize({
+    delimiter: ',',
+    // persist: false,
+
+
+    create: function(input) {
+        return {
+            // value: input,
+            // text: input,
+            name: input
+        }
+    },
+    valueField: 'name',
+    labelField: 'name',
+    searchField: 'name',
+    options: [],
+    loadThrottle: 600,
+    allowEmptyOption: true,
+    load: function(query, callback) {
+        if (!query.length) return callback();
+        $.ajax({
+            url: '/tags_api/private',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                name: query
+            },
+            error: function() {
+                callback();
+            },
+            success: function(res) {
+                // you can apply any modification to data before passing it to selectize
+                callback(res.tags);
+                // res is json response from server
+                // it contains array of objects. Each object has two properties. In this case 'id' and 'Name'
+                // if array is inside some other property of res like 'response' or something. than use this
+                //callback(res.response);
+            }
+        });
     }
   });
 
-  $('input#public_tag').keypress(function(e) {
-    if (e.keyCode == 13) {
-      $('#add_public').click();
+  $('input#public_tag').selectize({
+    delimiter: ',',
+    persist: false,
+    create: function(input) {
+        return {
+            value: input,
+            text: input
+        }
     }
   });
+
+
+  // $('input#private_tag').keypress(function(e) {
+  //   if (e.keyCode == 13) {
+  //     $('#add_private').click();
+  //   }
+  // });
+
+  // $('input#public_tag').keypress(function(e) {
+  //   if (e.keyCode == 13) {
+  //     $('#add_public').click();
+  //   }
+  // });
+
+
 });

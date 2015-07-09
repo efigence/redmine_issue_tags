@@ -9,6 +9,6 @@ scope :admin do
 end
 
 namespace :tags_api do
-  get '/private/:name' => "autocomplete#private"
-  get '/public/:name' => "autocomplete#public"
+  get '/private' => "autocomplete#private"
+  get '/public' => "autocomplete#public"
 end

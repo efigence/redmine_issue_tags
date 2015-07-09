@@ -5,7 +5,7 @@ module TagsApi
 
     def private
       name = params[:name]
-      tags = @user.owned_private_tags.where('name LIKE :q', q: "%#{name}%").pluck(:name)
+      tags = @user.owned_private_tags.where('name LIKE :q', q: "%#{name}%").pluck(:name).map { |s| {name: s}}
       render json: { tags: tags }
     end
 
