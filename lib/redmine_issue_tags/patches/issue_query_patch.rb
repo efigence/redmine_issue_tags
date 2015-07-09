@@ -91,12 +91,9 @@ module RedmineIssueTags
 
         def joins_for_order_statement_with_tags(order_options)
           joins_string = joins_for_order_statement_without_tags(order_options)
+          return joins_string unless tags_query?
 
-          if joins_string.present?
-            [joins_string, tags_join_statement].join(' ')
-          else
-            tags_join_statement
-          end
+          [joins_string, tags_join_statement].reject{|e| e.blank?}.join(' ')
         end
 
         def issue_count_with_tags
