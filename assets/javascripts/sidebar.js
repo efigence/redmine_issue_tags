@@ -93,4 +93,16 @@ $(function(){
       });
     }
   });
+
+  $('input#private_tag').keypress(function(e) {
+    if (e.keyCode == 13) {
+      $('#add_private').click();
+    }
+  });
+
+  $('input#public_tag').keypress(function(e) {
+    if (e.keyCode == 13) {
+      $('#add_public').click();
+    }
+  });
 });
