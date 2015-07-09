@@ -7,3 +7,8 @@ delete '/issues/:issue_id/private_tags/:tag_id' => "tags#destroy_private_tagging
 scope :admin do
   resources :tags, only: [:index, :destroy], controller: 'admin_tags', as: 'admin_tags'
 end
+
+namespace :tags_api do
+  get '/private/:name' => "autocomplete#private"
+  get '/public/:name' => "autocomplete#public"
+end
