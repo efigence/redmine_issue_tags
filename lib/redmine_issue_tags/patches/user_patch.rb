@@ -37,8 +37,7 @@ module RedmineIssueTags
 
         def allowed_to_private_tags_globally?
           return true if User.current.admin?
-          allowed_to_globally = projects.any? do |p|
-            allowed_to?(:manage_private_tags, p)
+          projects.any? { |p| allowed_to?(:manage_private_tags, p) }
           end
         end
       end
