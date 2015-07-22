@@ -7,7 +7,7 @@
 <h3><%= l(:public_tags) %></h3>
 <% if can_manage_public %>
   <div id="add-public-form" class="tags-form">
-    <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, issue_id: @issue.id}, style: 'display:none;' %>
+    <%= text_field_tag 'public_tag' %><%= submit_tag 'add', id: 'add_public', data: {url: public_tags_path, api_url: tags_api_public_path, issue_id: @issue.id}, style: 'display:none;' %>
   </div>
 <% end %>
 <div class="tags-inner-wrapper">

@@ -6,7 +6,7 @@
 <h3><%= l(:private_tags) %></h3>
 <% if @issue %>
   <div id="add-private-form" class="tags-form">
-    <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, issue_id: @issue.id}, style: 'display:none;' %>
+    <%= text_field_tag 'private_tag' %><%= submit_tag 'add', id: 'add_private', data: {url: private_tags_path, api_url: tags_api_private_path, issue_id: @issue.id}, style: 'display:none;' %>
   </div>
 <% end %>
 <div class="tags-inner-wrapper">
