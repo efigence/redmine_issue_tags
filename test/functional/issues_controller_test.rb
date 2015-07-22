@@ -36,7 +36,7 @@ class IssuesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
     user = User.find(2)
     delete_user_permission(user, :view_public_tags)
-    get :index, :project_id => 1
+    get :index, project_id: 1
     assert_response :success
     assert_select '#tags-wrapper' do
       assert_select "#public-tags-container", false
@@ -46,7 +46,7 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   test "issue page should contain add tag links" do
-    get :show, :id => 1
+    get :show, id: 1
     assert_response :success
     assert_add_tag_links_present
     assert_select "a.tag", text: "test_tag_1"
@@ -65,7 +65,23 @@ class IssuesControllerTest < ActionController::TestCase
     end
   end
 
+  test "project with issues with no tags should have issues visible" do
+    clean_all_tags!
+    @request.session[:user_id] = 2
+    get :index, project_id: 1
+    assert_select 'table.list.issues' do
+      assert_select 'tbody' do
+        assert_select 'tr.issue'
+      end
+    end
+  end
+
   private
+
+  def clean_all_tags!
+    ActsAsTaggableOn::Tag.delete_all
+    ActsAsTaggableOn::Tagging.delete_all
+  end
 
   def assert_no_add_tag_links
     assert_select '#tags-wrapper' do
