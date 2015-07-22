@@ -112,8 +112,8 @@ module RedmineIssueTags
         end
 
         def tags_join_statement
-          ["INNER JOIN taggings ON taggings.taggable_id = issues.id",
-           "INNER JOIN tags ON tags.id = taggings.tag_id"].join(' ')
+          ["LEFT JOIN taggings ON taggings.taggable_id = issues.id",
+           "LEFT JOIN tags ON tags.id = taggings.tag_id"].join(' ')
         end
       end
     end
