@@ -1,6 +1,6 @@
 .tag-container {
     display:inline-table;
-    margin-right:7px;
+    margin-right:8px;
 }
 
 .tag-del {
@@ -63,7 +63,7 @@
         inset 0 1px 0 #faeaba,
         0 1px 1px rgba(0,0,0,.1);
 
-    z-index:100;
+    /*z-index:100;*/
 }
 
 .tag:before {
@@ -94,7 +94,7 @@
     -moz-border-radius:0 0 0 0.25em;
     border-radius:0 0 0 0.25em;
 
-    z-index:1;
+    /*z-index:1;*/
 }
 
 .tag:after {
@@ -118,7 +118,7 @@
     position:absolute;
     top:0.667em;
     left:-0.083em;
-    z-index:9999;
+    /*z-index:9999;*/
 }
 
 .tag:hover {
@@ -139,4 +139,13 @@
     background-image: linear-gradient(left top, rgb(254, 225, 141), rgb(254, 200, 108));
 
     border-color:#e1b160;
+}
+
+.selectize-dropdown, .selectize-dropdown-content {
+    z-index: 1000;
+}
+
+.selectize-control.multi .selectize-input > div {
+  background: #FF6961 !important;
+  border: 1px solid #FF6961 !important;
 }

@@ -1,5 +1,23 @@
 $(function(){
-  $('#sidebar').append( $('#tags-wrapper') );
+
+  /*global Selectize*/
+  Selectize.define('enter_key_submit', function (options) {
+    var self = this
+
+    this.onKeyDown = (function (e) {
+      var original = self.onKeyDown
+      return function (e) {
+        if (e.keyCode === 13 && this.$control_input.val() === '') {
+          self.trigger('submit')
+          e.preventDefault()
+          return
+        }
+        return original.apply(this, arguments)
+      }
+    })()
+  })
+
+  // $('#sidebar').append( $('#tags-wrapper') );
 
   $('#add_private').click(function(e){
     e.preventDefault();
@@ -12,9 +30,7 @@ $(function(){
       },
       success: function(resp) {
         if (resp.status === 'success') {
-          var arr = $.map(resp.tag_links, function(v){
-            return v
-          });
+          var arr = $.map(resp.tag_links, function(v) { return v });
           $('#private-tags-container').html( arr.join(''));
         }
       },
@@ -64,7 +80,6 @@ $(function(){
     });
   });
 
-
   $('#toggle-public-form').click(function(e){
     e.preventDefault();
     var form = $('#add-public-form');
@@ -96,43 +111,53 @@ $(function(){
 
   $('input#private_tag').selectize({
     delimiter: ',',
-    // persist: false,
-
-
-    create: function(input) {
-        return {
-            // value: input,
-            // text: input,
-            name: input
-        }
-    },
+    plugins: ['enter_key_submit'],
     valueField: 'name',
     labelField: 'name',
     searchField: 'name',
     options: [],
     loadThrottle: 600,
     allowEmptyOption: true,
-    load: function(query, callback) {
-        if (!query.length) return callback();
-        $.ajax({
-            url: '/tags_api/private',
-            type: 'GET',
-            dataType: 'json',
-            data: {
-                name: query
-            },
-            error: function() {
-                callback();
-            },
-            success: function(res) {
-                // you can apply any modification to data before passing it to selectize
-                callback(res.tags);
-                // res is json response from server
-                // it contains array of objects. Each object has two properties. In this case 'id' and 'Name'
-                // if array is inside some other property of res like 'response' or something. than use this
-                //callback(res.response);
-            }
+
+    onInitialize: function (foo) {
+      this.on('submit', function () {
+        $('#add_private').click();
+        this.clearOptions();
+      }, this)
+    },
+
+    create: function(input) {
+      return { name: input }
+    },
+
+    onItemAdd: function() {
+      self = this;
+      var clearOpts = function(s) {
+        $.each(self.options, function(k,v) {
+          if ( self.items.indexOf(k) === -1 ) {
+            self.removeOption(k);
+          }
         });
+
+        self.refreshOptions();
+      }
+      clearOpts(this);
+    },
+
+    load: function(query, callback) {
+      if (!query.length) return callback();
+      $.ajax({
+        url: '/tags_api/private',
+        type: 'GET',
+        dataType: 'json',
+        data: { name: query },
+        error: function() {
+            callback();
+        },
+        success: function(res) {
+            callback(res.tags);
+        }
+      });
     }
   });
 
