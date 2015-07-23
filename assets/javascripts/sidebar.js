@@ -59,9 +59,8 @@
           });
         },
 
-        selectizeHelper: function(type) {
-
-          var addBtn = $('#add_' + type),
+        selectizeHelper: function(caller) {
+          var addBtn =  caller.next('input[type="submit"]'),
               apiUrl = addBtn.data('api-url');
 
           var clearOpts = function(selektize) {
@@ -159,20 +158,20 @@
     },
 
     selectizePrivateForm: function() {
-      $('input#private_tag').selectize(
-        this.events.helpers.selectizeHelper('private')
-      );
+      this.selectizeForm( $('input#private_tag') );
     },
 
     selectizePublicForm: function() {
-      $('input#public_tag').selectize(
-        this.events.helpers.selectizeHelper('public')
-      );
+      this.selectizeForm( $('input#public_tag') );
+    },
+
+    selectizeForm: function(context) {
+      var opts = this.events.helpers.selectizeHelper(context);
+      context.selectize(opts);
     }
   }
 
   $(function(){
-
     var selectizeEnterPlugin = (function(){
       Selectize.define('enter_key_submit', function (options) {
         var self = this;
@@ -190,8 +189,6 @@
         })()
       })
     })();
-
     tagsSidebar.init();
   });
-
 })();
