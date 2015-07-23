@@ -7,15 +7,15 @@
 
 
 <% if User.current.allowed_to?(:manage_private_tags, @project) %>
-  <p>
+  <p style="overflow:visible;">
     <%= label_tag 'issue_private_tags', 'Tagi prywatne' %>
-    <%= text_field_tag 'issue_private_tags', nil, class: 'new-issue-tags-form', data: {api_url: tags_api_private_path} %>
+    <%= text_field_tag 'issue_private_tags', params[:issue_private_tags], class: 'new-issue-tags-form', data: {api_url: tags_api_private_path} %>
   </p>
 <% end %>
 
 <% if User.current.allowed_to?(:manage_public_tags, @project) %>
-  <p>
+  <p style="overflow:visible;">
     <%= label_tag 'issue_public_tags', 'Tagi publiczne' %>
-    <%= text_field_tag 'issue_public_tags', nil, class: 'new-issue-tags-form', data: {api_url: tags_api_public_path} %>
+    <%= text_field_tag 'issue_public_tags', params[:issue_public_tags], class: 'new-issue-tags-form', data: {api_url: tags_api_public_path} %>
   </p>
 <% end %>
