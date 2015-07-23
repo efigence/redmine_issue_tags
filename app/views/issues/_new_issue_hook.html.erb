@@ -1,0 +1,21 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'selectize.css', :plugin => 'redmine_issue_tags' %>
+  <%= stylesheet_link_tag 'tags.css', :plugin => 'redmine_issue_tags' %>
+  <%= javascript_include_tag 'selectize.min.js', :plugin => 'redmine_issue_tags' %>
+  <%= javascript_include_tag 'new_issue_tags.js', :plugin => 'redmine_issue_tags' %>
+<% end %>
+
+
+<% if User.current.allowed_to?(:manage_private_tags, @project) %>
+  <p>
+    <%= label_tag 'issue_private_tags', 'Tagi prywatne' %>
+    <%= text_field_tag 'issue_private_tags', nil, class: 'new-issue-tags-form', data: {api_url: tags_api_private_path} %>
+  </p>
+<% end %>
+
+<% if User.current.allowed_to?(:manage_public_tags, @project) %>
+  <p>
+    <%= label_tag 'issue_public_tags', 'Tagi publiczne' %>
+    <%= text_field_tag 'issue_public_tags', nil, class: 'new-issue-tags-form', data: {api_url: tags_api_public_path} %>
+  </p>
+<% end %>

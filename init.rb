@@ -18,6 +18,8 @@ end
 ActionDispatch::Callbacks.to_prepare do
   require 'redmine_issue_tags/hooks/issue_sidebar_hook'
   require 'redmine_issue_tags/hooks/layout_hook'
+  require 'redmine_issue_tags/hooks/new_issue_hook'
+  require 'redmine_issue_tags/hooks/issues_controller_hook'
 
   require 'application_helper'
   ApplicationHelper.send :include, TagsHelper
