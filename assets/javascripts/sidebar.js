@@ -102,7 +102,6 @@
             },
 
             load: function(query, callback) {
-
               if (!query.length) return callback();
               $.ajax({
                 url: apiUrl,
