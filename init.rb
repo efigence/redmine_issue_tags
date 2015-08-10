@@ -33,4 +33,7 @@ ActionDispatch::Callbacks.to_prepare do
   IssueQuery.send(:include, RedmineIssueTags::Patches::IssueQueryPatch)
   Project.send(:include, RedmineIssueTags::Patches::ProjectPatch)
   User.send(:include, RedmineIssueTags::Patches::UserPatch)
+
+  require 'redmine_issue_tags/patches/issues_controller_patch'
+  IssuesController.send :include, RedmineIssueTags::Patches::IssuesControllerPatch
 end
