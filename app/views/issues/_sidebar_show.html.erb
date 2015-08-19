@@ -17,7 +17,7 @@
 
   <% if User.current.allowed_to?(:view_public_tags, @issue.project) %>
     <% public_tags_count = @issue.tag_counts_on(:public_tags).count %>
-    <% cache "issue_public_tags_#{@issue.id}_#{public_tags_count}" do %>
+    <% cache "issue_public_tags_#{@issue.id}_#{User.current.id}_#{public_tags_count}" do %>
       <% public_tags = @issue.tag_counts_on(:public_tags).limit(50).pluck(:id, :name) %>
       <%= render 'issues/public_tags', public_tags: public_tags %>
     <% end %>
