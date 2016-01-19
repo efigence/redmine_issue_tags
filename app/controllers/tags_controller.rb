@@ -10,6 +10,7 @@ class TagsController < ApplicationController
     tags_list << params[:value]
 
     if @user.tag(@issue, with: tags_list, on: :private_tags)
+      @user.owned_private_tags.find_by(name: params[:value]).try(:touch)
       render json: {
         status: 'success',
         tag_links: private_tag_links

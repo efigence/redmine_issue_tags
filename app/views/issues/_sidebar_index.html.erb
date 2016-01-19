@@ -6,16 +6,16 @@
   <% if @project %>
 
     <% if User.current.allowed_to?(:manage_private_tags, @project) %>
-      <% tags_count = @project.private_tags.count %>
-      <% cache "project_private_tags_#{@project.id}_#{User.current.id}_#{tags_count}" do %>
+      <% tags_last_edit = last_update(@project.private_tags) %>
+      <% cache "project_private_tags_#{@project.id}_#{User.current.id}_#{tags_last_edit}" do %>
         <% private_tags = @project.private_tags.limit(50).pluck(:id, :name) %>
         <%= render 'issues/private_tags', private_tags: private_tags %>
       <% end %>
     <% end %>
 
     <% if User.current.allowed_to?(:view_public_tags, @project) %>
-      <% tags_count = @project.public_tags.count %>
-      <% cache "project_public_tags_#{@project.id}_#{User.current.id}_#{tags_count}" do %>
+      <% tags_last_edit = last_update(@project.public_tags) %>
+      <% cache "project_public_tags_#{@project.id}_#{User.current.id}_#{tags_last_edit}" do %>
         <% public_tags = @project.public_tags.limit(50).pluck(:id, :name) %>
         <%= render 'issues/public_tags', public_tags: public_tags %>
       <% end %>
@@ -24,16 +24,16 @@
   <% else %>
 
     <% if User.current.allowed_to_private_tags_globally? %>
-      <% tags_count = User.current.owned_private_tags.count %>
-      <% cache "global_private_tags_#{User.current.id}_#{tags_count}" do %>
+      <% tags_last_edit = last_update(User.current.owned_private_tags) %>
+      <% cache "global_private_tags_#{User.current.id}_#{tags_last_edit}" do %>
         <% private_tags = User.current.owned_private_tags.limit(50).pluck(:id, :name) %>
         <%= render 'issues/private_tags', private_tags: private_tags %>
       <% end %>
     <% end %>
 
     <% if User.current.allowed_projects_public_tags.any? %>
-      <% tags_count = User.current.globally_allowed_public_tags.count %>
-      <% cache "global_public_tags_#{User.current.id}_#{tags_count}" do %>
+      <% tags_last_edit = last_update(User.current.globally_allowed_public_tags) %>
+      <% cache "global_public_tags_#{User.current.id}_#{tags_last_edit}" do %>
         <% public_tags = User.current.globally_allowed_public_tags.limit(50).pluck(:id, :name) %>
         <%= render 'issues/public_tags', public_tags: public_tags %>
       <% end %>

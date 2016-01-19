@@ -8,16 +8,16 @@
 
 <div id="tags-wrapper" data-confirm="<%= l(:confirm_tag_delete) %>">
   <% if User.current.allowed_to?(:manage_private_tags, @issue.project) %>
-    <% private_tags_count = @issue.owner_tags_on(User.current, :private_tags).count %>
-    <% cache "issue_private_tags_#{@issue.id}_#{User.current.id}_#{private_tags_count}" do %>
+    <% private_tags_last_edit = last_update(@issue.owner_tags_on(User.current, :private_tags)) %>
+    <% cache "issue_private_tags_#{@issue.id}_#{User.current.id}_#{private_tags_last_edit}" do %>
       <% private_tags = @issue.owner_tags_on(User.current, :private_tags).limit(50).pluck(:id, :name) %>
       <%= render 'issues/private_tags', private_tags: private_tags %>
     <% end %>
   <% end %>
 
   <% if User.current.allowed_to?(:view_public_tags, @issue.project) %>
-    <% public_tags_count = @issue.tag_counts_on(:public_tags).count %>
-    <% cache "issue_public_tags_#{@issue.id}_#{User.current.id}_#{public_tags_count}" do %>
+    <% public_tags_last_edit = last_update(@issue.tag_counts_on(:public_tags)) %>
+    <% cache "issue_public_tags_#{@issue.id}_#{User.current.id}_#{public_tags_last_edit}" do %>
       <% public_tags = @issue.tag_counts_on(:public_tags).limit(50).pluck(:id, :name) %>
       <%= render 'issues/public_tags', public_tags: public_tags %>
     <% end %>

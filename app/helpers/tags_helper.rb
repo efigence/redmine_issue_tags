@@ -14,4 +14,8 @@ module TagsHelper
   def build_html_for_tag(issues_link, destroy_link)
     %{<span class="tag-container">#{issues_link}<span class="tag-del" data-url="#{destroy_link}">✕</span></span>}
   end
+
+  def last_update data
+    data.select('MAX(updated_at) as last_update').first.try(:last_update)
+  end
 end
