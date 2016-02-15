@@ -38,7 +38,7 @@ class IssueQueryTest < ActiveSupport::TestCase
     tag_names = selectable.map(&:first)
     assert tag_names.include?("test_tag_5")
     assert_not tag_names.include?("test_tag_4")
-    assert_equal 1, tag_names.length
+    assert_equal 2, tag_names.length
   end
 
   def test_public_tags_from_another_project_not_included_as_selectable
@@ -60,8 +60,22 @@ class IssueQueryTest < ActiveSupport::TestCase
     assert @query.statement.include?("tags.id IN (1) AND taggings.context = 'public_tags'")
   end
 
-  def test_statement_should_include_tag_query_for_public_tags
+  def test_statement_should_include_tag_query_for_private_tags
     @query.add_filter('private_tag_id', '=', ['4'])
-    assert @query.statement.include?("tags.id IN (4) AND taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}")
+    assert @query.statement.include?("tags.id IN (4) AND taggings.context = 'private_tags'")
+  end
+
+  def test_private_tags_count_should_equal_proper_value
+    @query.add_filter('private_tag_id', '*')
+    selectable = @query.send(:selectable_private_tags, @project)
+    tag_names = selectable.map(&:first)
+    assert_equal 2, tag_names.length
+  end
+
+  def test_public_tags_count_should_equal_proper_value
+    @query.add_filter('public_tag_id', '*')
+    selectable = @query.send(:selectable_public_tags, @project)
+    tag_names = selectable.map(&:first)
+    assert_equal 4, tag_names.length
   end
 end

@@ -154,3 +154,19 @@
 .new-issue-tags-form {
   max-width: 442px;
 }
+
+.with-tags {
+  padding: 5px 8px;
+  -webkit-box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 1px 0.5px rgba(0,0,0,0.75);
+  background-color: #acc6df;
+  color: #000 !important;
+  display: inline-block;
+  -webkit-transition: all 0.3s !important;
+  transition: all 0.3s !important;
+}
+.with-tags:hover {
+  text-decoration: none;
+  background-color: #7ea7cd;
+}

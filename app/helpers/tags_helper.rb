@@ -18,4 +18,9 @@ module TagsHelper
   def last_update data
     data.select('MAX(updated_at) as last_update').first.try(:last_update)
   end
+
+  def link_to_without_or_all_tags(tag_name, type, operator)
+    kaller = self.respond_to?(:link_to) ? self : view_context
+    kaller.link_to tag_name, project_issues_path(utf8: "✓", set_filter: '1', f: ["status_id", type.to_s, ''], op: {"status_id"=>"o", type.to_s => operator.to_s}, project_id: @project.try(:identifier)), class: 'with-tags'
+  end
 end

@@ -12,8 +12,10 @@
 <div class="tags-inner-wrapper">
   <hr>
   <div class="tags-container" id="private-tags-container">
+    <%= link_to_without_or_all_tags('without tags', :private_tag_id, '!*') %>
+    <%= link_to_without_or_all_tags('with tags', :private_tag_id, '*') %>
+    <br><br>
     <% private_tags.each do |tag_id, tag_name| %>
-
       <% if @issue %>
 
         <span class="tag-container">

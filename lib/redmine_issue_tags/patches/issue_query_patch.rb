@@ -21,12 +21,12 @@ module RedmineIssueTags
           if project
             if User.current.allowed_to?(:view_public_tags, project)
               add_available_filter "public_tag_id",
-                :type => :list,
+                :type => :list_optional,
                 :values => selectable_public_tags(project)
             end
             if User.current.allowed_to?(:manage_private_tags, project)
               add_available_filter "private_tag_id",
-                :type => :list,
+                :type => :list_optional,
                 :values => selectable_private_tags(project)
             end
           else
@@ -46,13 +46,25 @@ module RedmineIssueTags
 
         def sql_for_public_tag_id_field(field, operator, v)
           sql_for_tag_field(operator, v) do |sql_operator|
-            "tags.id #{sql_operator} (:ids) AND taggings.context = 'public_tags'"
+            if operator == '!*'
+              "(tags.id IS NULL OR tags.id NOT IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'public_tags'))"
+            elsif operator == '*'
+              "(tags.id IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'public_tags'))"
+            else
+              "tags.id #{sql_operator} (:ids) AND taggings.context = 'public_tags'"
+            end
           end
         end
 
         def sql_for_private_tag_id_field(field, operator, v)
           sql_for_tag_field(operator, v) do |sql_operator|
-            "tags.id #{sql_operator} (:ids) AND taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}"
+            if operator == '!*'
+              "(tags.id IS NULL OR tags.id NOT IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags') OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
+            elsif operator == '*'
+              "(tags.id IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags') OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
+            else
+              "tags.id #{sql_operator} (:ids) AND taggings.context = 'private_tags'"
+            end
           end
         end
 
@@ -70,7 +82,7 @@ module RedmineIssueTags
                   else
                     User.current.globally_allowed_public_tags
                   end
-          scope.pluck(:name, :id).map {|a| a.map(&:to_s)}
+          scope.pluck(:name, :id).map {|a| a.map(&:to_s)} << '<none>'
         end
 
         def selectable_private_tags(project=nil)
@@ -79,7 +91,7 @@ module RedmineIssueTags
                   else
                     User.current.owned_private_tags
                   end
-          scope.pluck(:name, :id).map {|a| a.map(&:to_s)}
+          scope.pluck(:name, :id).map {|a| a.map(&:to_s)} << '<none>'
         end
 
         def sql_operator_for_tags(operator)
