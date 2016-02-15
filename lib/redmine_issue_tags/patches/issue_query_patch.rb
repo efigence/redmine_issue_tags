@@ -59,7 +59,7 @@ module RedmineIssueTags
         def sql_for_private_tag_id_field(field, operator, v)
           sql_for_tag_field(operator, v) do |sql_operator|
             if operator == '!*'
-              "(tags.id IS NULL OR tags.id NOT IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags') OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
+              "(tags.id IS NULL OR tags.id NOT IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}) OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
             elsif operator == '*'
               "(tags.id IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags') OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
             else
