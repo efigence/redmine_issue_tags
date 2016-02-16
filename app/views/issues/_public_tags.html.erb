@@ -13,9 +13,11 @@
 <div class="tags-inner-wrapper">
   <hr>
   <div class="tags-container" id="public-tags-container">
-    <%= link_to_without_or_all_tags('without tags', :public_tag_id, '!*') %>
-    <%= link_to_without_or_all_tags('with tags', :public_tag_id, '*') %>
-    <br><br>
+    <% if @issue.nil? %>
+      <%= link_to_without_or_all_tags('without tags', :public_tag_id, '!*') %>
+      <%= link_to_without_or_all_tags('with tags', :public_tag_id, '*') %>
+      <br><br>
+    <% end %>
     <% public_tags.each do |tag_id, tag_name| %>
 
       <% if can_manage_public %>
