@@ -59,9 +59,9 @@ module RedmineIssueTags
         def sql_for_private_tag_id_field(field, operator, v)
           sql_for_tag_field(operator, v) do |sql_operator|
             if operator == '!*'
-              "(tags.id IS NULL OR tags.id NOT IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}) OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
+              "(tags.id IS NULL OR tags.id NOT IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}))"
             elsif operator == '*'
-              "(tags.id IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags') OR (taggings.context = 'private_tags' AND taggings.tagger_id != #{User.current.id}))"
+              "(tags.id IN (SELECT DISTINCT tag_id FROM tags INNER JOIN taggings ON tags.id = taggings.tag_id WHERE taggings.context = 'private_tags' AND taggings.tagger_id = #{User.current.id}))"
             else
               "tags.id #{sql_operator} (:ids) AND taggings.context = 'private_tags'"
             end
@@ -82,7 +82,7 @@ module RedmineIssueTags
                   else
                     User.current.globally_allowed_public_tags
                   end
-          scope.pluck(:name, :id).map {|a| a.map(&:to_s)} << '<none>'
+          scope.pluck(:name, :id).map {|a| a.map(&:to_s)}
         end
 
         def selectable_private_tags(project=nil)
@@ -91,7 +91,7 @@ module RedmineIssueTags
                   else
                     User.current.owned_private_tags
                   end
-          scope.pluck(:name, :id).map {|a| a.map(&:to_s)} << '<none>'
+          scope.pluck(:name, :id).map {|a| a.map(&:to_s)}
         end
 
         def sql_operator_for_tags(operator)

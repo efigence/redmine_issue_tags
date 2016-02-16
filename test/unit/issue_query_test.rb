@@ -66,22 +66,13 @@ class IssueQueryTest < ActiveSupport::TestCase
   end
 
   def test_private_tags_count_should_equal_proper_value
-    User.current = users(:admin)
-    @query = IssueQuery.new(:name => '_')
+    @project = Project.find(11)
+    @query = IssueQuery.new(:project => @project, :name => '_')
+    User.current = users(:wacek)
     @query.add_filter('private_tag_id', '*')
     selectable = @query.send(:selectable_private_tags)
     tag_names = selectable.map(&:first)
-    assert_not tag_names.include?("test_tag_1")
-    assert tag_names.include?("test_tag_5")
-  end
-
-  def test_public_tags_count_should_equal_proper_value
-    User.current = users(:admin)
-    @query = IssueQuery.new(:name => '_')
-    @query.add_filter('public_tag_id', '*')
-    selectable = @query.send(:selectable_public_tags)
-    tag_names = selectable.map(&:first)
-    assert tag_names.include?("test_tag_1")
-    assert_not tag_names.include?("test_tag_4")
+    assert_not tag_names.include?("test_tag_11")
+    assert tag_names.include?("test_tag_12")
   end
 end

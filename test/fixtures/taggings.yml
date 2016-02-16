@@ -63,3 +63,45 @@ public_tagging_4: # for admin @ project_1 issue 2
   context: public_tags
   created_at: <%= Time.now %>
   project_id: 1
+
+
+private_tagging_11:
+  id: 11
+  tag_id: 11
+  taggable_id: 111
+  taggable_type: Issue
+  tagger_id: 11
+  tagger_type: Principal
+  context: private_tags
+  created_at: <%= Time.now %>
+  project_id: 11
+private_tagging_12:
+  id: 12
+  tag_id: 12
+  taggable_id: 112
+  taggable_type: Issue
+  tagger_id: 12
+  tagger_type: Principal
+  context: private_tags
+  created_at: <%= Time.now %>
+  project_id: 11
+public_tagging_13:
+  id: 13
+  tag_id: 13
+  taggable_id: 111
+  taggable_type: Issue
+  tagger_id: 1
+  tagger_type: Principal
+  context: public_tags
+  created_at: <%= Time.now %>
+  project_id: 11
+public_tagging_14:
+  id: 14
+  tag_id: 14
+  taggable_id: 112
+  taggable_type: Issue
+  tagger_id: 1
+  tagger_type: Principal
+  context: public_tags
+  created_at: <%= Time.now %>
+  project_id: 11

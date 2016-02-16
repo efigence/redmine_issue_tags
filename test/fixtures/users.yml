@@ -33,3 +33,38 @@ manager:
   mail_notification: all
   login: jsmith
   type: User
+
+krzysio:
+  created_on: 2006-07-19 19:32:11 +02:00
+  status: 1
+  last_login_on: 2006-07-19 22:42:15 +02:00
+  language: en
+  # password = jsmith
+  salt: 67eb4732624d5a7753dcea7ce0bb7d7d
+  hashed_password: bfbe06043353a677d0215b26a5800d128d5413bd
+  updated_on: 2006-07-19 22:42:15 +02:00
+  admin: false
+  lastname: Krawczyk
+  firstname: Krzysio
+  id: 11
+  auth_source_id:
+  mail_notification: all
+  login: kkrawczyk
+  type: User
+wacek:
+  created_on: 2006-07-19 19:32:10 +02:00
+  status: 1
+  last_login_on: 2006-07-19 22:42:15 +02:00
+  language: en
+  # password = jsmith
+  salt: 67eb4732624d5a7753dcea7ce0bb7d7d
+  hashed_password: bfbe06043353a677d0215b26a5800d128d5413be
+  updated_on: 2006-07-19 22:42:15 +02:00
+  admin: false
+  lastname: Stachursky
+  firstname: Wacek
+  id: 12
+  auth_source_id:
+  mail_notification: all
+  login: wstachu
+  type: User
