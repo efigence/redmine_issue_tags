@@ -38,7 +38,7 @@ class IssueQueryTest < ActiveSupport::TestCase
     tag_names = selectable.map(&:first)
     assert tag_names.include?("test_tag_5")
     assert_not tag_names.include?("test_tag_4")
-    assert_equal 2, tag_names.length
+    assert_equal 1, tag_names.length
   end
 
   def test_public_tags_from_another_project_not_included_as_selectable
