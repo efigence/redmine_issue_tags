@@ -7,7 +7,7 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   test "index should have public tags and private tags in sidebar" do
-    get :index, :project_id => 1
+    get :index
     assert_response :success
     assert_no_add_tag_links
   end
